@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
+<title>电摩减震器调校 Pro · iPad 离线版</title>
+<style>
+:root{
+  --bg:#f2f4f7; --panel:#ffffff; --soft:#f7f8fa; --line:#dfe3e8;
+  --text:#17212b; --muted:#687583; --blue:#1473e6; --blue2:#eaf3ff;
+  --good:#16804b; --warn:#b26a00; --bad:#b42318; --shadow:0 8px 28px rgba(20,34,50,.08);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Microsoft YaHei",sans-serif}
+button,input,select{font:inherit}
+body{padding-bottom:calc(82px + env(safe-area-inset-bottom))}
+.app{max-width:1180px;margin:auto;padding:calc(14px + env(safe-area-inset-top)) 22px 28px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:16px}
+h1{font-size:clamp(26px,3.6vw,40px);margin:0;font-weight:850;letter-spacing:-.03em}
+.sub{margin:5px 0 0;color:var(--muted);font-size:15px}
+.status{font-size:13px;color:var(--good);background:#eaf8f0;padding:10px 13px;border-radius:12px;white-space:nowrap}
+.nav{display:flex;gap:9px;overflow:auto;padding:4px 0 12px;position:sticky;top:0;background:rgba(242,244,247,.94);backdrop-filter:blur(14px);z-index:10}
+.nav button{min-height:52px;padding:0 18px;border:1px solid var(--line);border-radius:16px;background:var(--panel);color:var(--muted);font-weight:750;white-space:nowrap;cursor:pointer}
+.nav button.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.page{display:none}.page.active{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:20px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card h2{font-size:21px;margin:0 0 16px}.card h3{font-size:17px;margin:18px 0 12px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.field{display:flex;flex-direction:column;gap:7px}
+label{font-size:13px;color:var(--muted);font-weight:650}
+input,select{min-height:54px;border:1px solid var(--line);border-radius:14px;padding:10px 13px;background:#fff;color:var(--text);font-size:18px}
+input:focus,select:focus{outline:3px solid rgba(20,115,230,.18);border-color:var(--blue)}
+input[type=range]{padding:0;border:0;accent-color:var(--blue);width:100%;height:32px}
+.segment{display:flex;gap:9px;flex-wrap:wrap}
+.segment button{min-height:52px;padding:0 17px;border-radius:14px;border:1px solid var(--line);background:var(--soft);font-weight:750;color:var(--text);cursor:pointer}
+.segment button.active{background:var(--blue2);border-color:var(--blue);color:var(--blue)}
+.sliderbox{background:var(--soft);border:1px solid var(--line);padding:16px;border-radius:18px;margin:12px 0}
+.sliderhead{display:flex;align-items:center;justify-content:space-between;gap:12px}.sliderhead b{font-size:27px;color:var(--blue)}
+.step{display:grid;grid-template-columns:64px 1fr 64px;gap:10px;align-items:center;margin-top:8px}
+.step button{height:60px;border:1px solid var(--line);border-radius:16px;background:#fff;font-size:27px;font-weight:850;cursor:pointer}.step div{text-align:center;font-weight:750;color:var(--muted)}
+.primary,.secondary,.danger{min-height:58px;border-radius:16px;padding:0 20px;font-weight:800;cursor:pointer}
+.primary{border:0;background:var(--blue);color:#fff;width:100%;font-size:18px}.secondary{border:1px solid var(--line);background:#fff;color:var(--text)}.danger{border:1px solid #f4c7c3;background:#fff4f3;color:var(--bad)}
+.results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.result{padding:16px;border-radius:17px;background:var(--soft);border:1px solid var(--line)}.result span{font-size:13px;color:var(--muted);font-weight:650}.result strong{display:block;margin-top:7px;font-size:27px;letter-spacing:-.02em}
+.note{margin-top:13px;padding:14px;border-radius:14px;background:var(--blue2);border-left:5px solid var(--blue);line-height:1.65}
+.actions{display:flex;gap:10px;flex-wrap:wrap}.actions>*{flex:1;min-width:180px}
+.filelabel{display:flex;align-items:center;justify-content:center;min-height:58px;padding:0 18px;border:2px dashed #9bbfe8;border-radius:16px;background:#f7fbff;color:var(--blue);font-weight:800;cursor:pointer}.filelabel input{display:none}
+.listItem{padding:15px;border:1px solid var(--line);border-radius:16px;margin-top:10px;background:var(--soft)}.listItem b{font-size:17px}.listItem small{display:block;color:var(--muted);margin-top:5px;line-height:1.5}
+.bottom{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:10px max(16px,calc((100vw - 1136px)/2));padding-bottom:calc(10px + env(safe-area-inset-bottom));z-index:20}
+.bottomin{max-width:1180px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:760px){.app{padding-left:14px;padding-right:14px}.grid,.results{grid-template-columns:1fr}.status{display:none}.topbar{margin-bottom:8px}.nav{margin-left:-2px}.actions>*{min-width:100%}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div><h1>🏍️ 电摩减震器调校 Pro</h1><p class="sub">真正离线 · iPad 触控优化 · 前后独立参数</p></div>
+    <div class="status" id="status">● 已离线保存</div>
+  </div>
+
+  <nav class="nav">
+    <button class="active" data-page="vehicle">车辆</button>
+    <button data-page="front">前减震</button>
+    <button data-page="rear">后减震</button>
+    <button data-page="geometry">车身几何</button>
+    <button data-page="result">结果</button>
+    <button data-page="data">方案 / 数据</button>
+  </nav>
+
+  <main>
+    <section class="page active" id="vehicle">
+      <div class="card">
+        <h2>车辆与负载</h2>
+        <div class="grid">
+          <div class="field"><label>车型 / 调校名称</label><input id="setupName" value="我的电摩"></div>
+          <div class="field"><label>整车重量 kg</label><input id="bikeWeight" type="number" inputmode="decimal" value="120"></div>
+          <div class="field"><label>骑手重量 kg</label><input id="riderWeight" type="number" inputmode="decimal" value="75"></div>
+          <div class="field"><label>额外载重 kg</label><input id="cargoWeight" type="number" inputmode="decimal" value="0"></div>
+          <div class="field"><label>前轮尺寸（英寸）</label><input id="frontWheelInch" type="number" inputmode="decimal" value="21"></div>
+          <div class="field"><label>当前车头角（°）</label><input id="headAngle" type="number" step="0.1" inputmode="decimal" value="27"></div>
+          <div class="field"><label>当前拖曳距 Trail（mm）</label><input id="trailCurrent" type="number" inputmode="decimal" value="110"></div>
+          <div class="field"><label>目标拖曳距 Trail（mm）</label><input id="trailTarget" type="number" inputmode="decimal" value="100"></div>
+        </div>
+        <p class="sub" style="margin-top:14px">拖曳距调整根据前轮尺寸、车头角和当前/目标 Trail 进行几何估算。</p>
+        <h3>骑行用途</h3>
+        <div class="segment" id="style">
+          <button data-v="city" class="active">城市通勤</button><button data-v="sport">运动 / 山路</button>
+          <button data-v="highway">高速巡航</button><button data-v="load">双人 / 重载</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="front">
+      <div class="card">
+        <h2>前减震独立参数</h2>
+        <div class="grid">
+          <div class="field"><label>前轴载荷比例 %</label><input id="frontAxle" type="number" value="45"></div>
+          <div class="field"><label>前减震有效行程 mm</label><input id="frontTravel" type="number" value="120"></div>
+          <div class="field"><label>前弹簧等效刚度 N/mm</label><input id="frontRate" type="number" step="0.1" value="9"></div>
+          <div class="field"><label>前弹簧自由长度 mm</label><input id="frontFree" type="number" value="300"></div>
+          <div class="field"><label>前弹簧安装长度 mm</label><input id="frontInstalled" type="number" value="290"></div>
+          <div class="field"><label>实际 Static Sag mm（可选）</label><input id="frontStatic" type="number" placeholder="留空自动估算"></div>
+          <div class="field"><label>实际 Rider Sag mm（可选）</label><input id="frontRider" type="number" placeholder="留空自动估算"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>前阻尼</h2>
+        <div class="sliderbox"><div class="sliderhead"><span>压缩 Compression</span><b><span id="frontCompV">12</span> Click</b></div><input id="frontComp" type="range" min="0" max="24" value="12"><div class="step"><button onclick="step('frontComp',-1)">−</button><div>从全软开始</div><button onclick="step('frontComp',1)">＋</button></div></div>
+        <div class="sliderbox"><div class="sliderhead"><span>回弹 Rebound</span><b><span id="frontRebV">12</span> Click</b></div><input id="frontReb" type="range" min="0" max="24" value="12"><div class="step"><button onclick="step('frontReb',-1)">−</button><div>从全软开始</div><button onclick="step('frontReb',1)">＋</button></div></div>
+      </div>
+    </section>
+
+    <section class="page" id="rear">
+      <div class="card">
+        <h2>后减震独立参数</h2>
+        <div class="grid">
+          <div class="field"><label>后轴载荷比例 %</label><input id="rearAxle" type="number" value="55"></div>
+          <div class="field"><label>后减震器行程 mm</label><input id="rearTravel" type="number" value="60"></div>
+          <div class="field"><label>后弹簧刚度 N/mm</label><input id="rearRate" type="number" step="0.1" value="80"></div>
+          <div class="field"><label>后弹簧自由长度 mm</label><input id="rearFree" type="number" value="200"></div>
+          <div class="field"><label>后弹簧安装长度 mm</label><input id="rearInstalled" type="number" value="190"></div>
+          <div class="field"><label>后悬挂连杆比</label><input id="rearLink" type="number" step="0.1" value="2.5"></div>
+          <div class="field"><label>实际 Static Sag（轮端）mm</label><input id="rearStatic" type="number" placeholder="留空自动估算"></div>
+          <div class="field"><label>实际 Rider Sag（轮端）mm</label><input id="rearRider" type="number" placeholder="留空自动估算"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>后阻尼</h2>
+        <div class="sliderbox"><div class="sliderhead"><span>压缩 Compression</span><b><span id="rearCompV">12</span> Click</b></div><input id="rearComp" type="range" min="0" max="24" value="12"><div class="step"><button onclick="step('rearComp',-1)">−</button><div>从全软开始</div><button onclick="step('rearComp',1)">＋</button></div></div>
+        <div class="sliderbox"><div class="sliderhead"><span>回弹 Rebound</span><b><span id="rearRebV">12</span> Click</b></div><input id="rearReb" type="range" min="0" max="24" value="12"><div class="step"><button onclick="step('rearReb',-1)">−</button><div>从全软开始</div><button onclick="step('rearReb',1)">＋</button></div></div>
+      </div>
+    </section>
+
+    
+    <section class="page" id="geometry">
+      <div class="card">
+        <h2>车身几何模式</h2>
+        <p class="sub">将轴距、前后轮径、车头角、前叉 Offset 与前后 Sag 联动，用于估算调校后的车身姿态变化。</p>
+        <div class="grid">
+          <div class="field"><label>轴距 Wheelbase（mm）</label><input id="wheelbase" type="number" inputmode="decimal" value="1450"></div>
+          <div class="field"><label>前轮尺寸（英寸）</label><input id="frontWheelGeom" type="number" inputmode="decimal" value="21"></div>
+          <div class="field"><label>后轮尺寸（英寸）</label><input id="rearWheelInch" type="number" inputmode="decimal" value="18"></div>
+          <div class="field"><label>原始车头角（°）</label><input id="baseHeadAngle" type="number" step="0.1" value="27"></div>
+          <div class="field"><label>三角台 / 前叉 Offset（mm）</label><input id="forkOffset" type="number" step="0.1" value="35"></div>
+          <div class="field"><label>原始前 Static Sag（mm）</label><input id="baseFrontSag" type="number" step="0.1" value="35"></div>
+          <div class="field"><label>原始后 Static Sag（轮端 mm）</label><input id="baseRearSag" type="number" step="0.1" value="30"></div>
+          <div class="field"><label>几何计算使用</label><select id="geometrySagMode"><option value="rider">当前 Rider Sag</option><option value="static">当前 Static Sag</option></select></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>几何联动计算</h2>
+        <div class="results" id="geometryResults"></div>
+        <div class="note" id="geometryAdvice"></div>
+      </div>
+      <div class="card">
+        <h2>调校影响提示</h2>
+        <div class="note" id="geometryBehavior"></div>
+      </div>
+    </section>
+
+    <section class="page" id="result">
+      <div class="card">
+        <h2>前端几何 / 拖曳距调整</h2>
+        <div class="results" id="trailResults"></div>
+        <div class="note" id="trailAdvice"></div>
+      </div>
+      <div class="card"><h2>前减震计算结果</h2><div class="results" id="frontResults"></div><div class="note" id="frontAdvice"></div></div>
+      <div class="card"><h2>后减震计算结果</h2><div class="results" id="rearResults"></div><div class="note" id="rearAdvice"></div></div>
+      <div class="card"><h2>前后平衡</h2><div class="note" id="balance"></div></div>
+    </section>
+
+    <section class="page" id="data">
+      <div class="card"><h2>方案管理</h2>
+        <div class="actions"><button class="primary" onclick="saveProfile()">💾 保存当前方案</button><button class="secondary" onclick="exportCurrent()">⬇️ 导出当前方案</button><button class="secondary" onclick="exportAll()">📦 导出全部方案</button></div>
+      </div>
+      <div class="card"><h2>导入方案</h2><label class="filelabel">📥 选择 JSON 文件导入<input id="importFile" type="file" accept=".json,application/json"></label><div class="note" id="importMsg">导入仅支持本工具导出的 JSON 数据。</div></div>
+      <div class="card"><h2>本机方案</h2><div id="profiles"></div></div>
+    </section>
+  </main>
+</div>
+
+<div class="bottom"><div class="bottomin"><button class="secondary" onclick="prevPage()">← 上一步</button><button class="primary" onclick="calculate();nextPage()">计算 / 下一步 →</button></div></div>
+
+<script>
+const ids=['setupName','bikeWeight','riderWeight','cargoWeight','frontWheelInch','headAngle','trailCurrent','trailTarget','wheelbase','frontWheelGeom','rearWheelInch','baseHeadAngle','forkOffset','baseFrontSag','baseRearSag','geometrySagMode','frontAxle','frontTravel','frontRate','frontFree','frontInstalled','frontStatic','frontRider','frontComp','frontReb','rearAxle','rearTravel','rearRate','rearFree','rearInstalled','rearLink','rearStatic','rearRider','rearComp','rearReb'];
+let rideStyle='city';
+const order=['vehicle','front','rear','geometry','result','data'];
+function $(id){return document.getElementById(id)}
+function num(id){const x=parseFloat($(id).value);return Number.isFinite(x)?x:0}
+function page(id){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>page(b.dataset.page));
+function currentPage(){return document.querySelector('.page.active').id}
+function nextPage(){const i=order.indexOf(currentPage());page(order[Math.min(i+1,order.length-1)])}
+function prevPage(){const i=order.indexOf(currentPage());page(order[Math.max(i-1,0)])}
+document.querySelectorAll('#style button').forEach(b=>b.onclick=()=>{rideStyle=b.dataset.v;document.querySelectorAll('#style button').forEach(x=>x.classList.toggle('active',x===b));persist()});
+function step(id,d){const e=$(id);e.value=Math.max(+e.min,Math.min(+e.max,+e.value+d));updateUI();persist()}
+function updateUI(){frontCompV.textContent=frontComp.value;frontRebV.textContent=frontReb.value;rearCompV.textContent=rearComp.value;rearRebV.textContent=rearReb.value}
+function data(){const v={};ids.forEach(id=>v[id]=$(id).value);return {app:'EMotoSuspensionProOffline',version:1,rideStyle,values:v,updatedAt:new Date().toISOString()}}
+function persist(){localStorage.setItem('emoto_ipad_offline_draft',JSON.stringify(data()));status.textContent='● 已离线保存'}
+function apply(d){const v=d.values||d;ids.forEach(id=>{if(v[id]!==undefined)$(id).value=v[id]});rideStyle=d.rideStyle||'city';document.querySelectorAll('#style button').forEach(b=>b.classList.toggle('active',b.dataset.v===rideStyle));updateUI();calculate();persist()}
+function target(){return {city:.30,sport:.25,highway:.28,load:.33}[rideStyle]}
+function calc(axle,rate,free,installed,travel,stat,rider,link){
+ const ratio=link?Math.max(num(link),1):1, r=Math.max(num(rate),.001), a=Math.max(num(axle)/100,0), g=9.81;
+ const bike=num('bikeWeight'), loaded=bike+num('riderWeight')+num('cargoWeight');
+ const pre=Math.max(num(free)-num(installed),0);
+ const ts=bike*a*g/r*ratio, tr=loaded*a*g/r*ratio;
+ const s=num(stat)>0?num(stat):ts, rd=num(rider)>0?num(rider):tr;
+ const eff=Math.max(num(travel)*ratio,1), tar=eff*target();
+ return {pre,force:pre*r,sag:s,rider:rd,eff,target:tar,remain:Math.max(eff-rd,0)};
+}
+function resultHTML(x,prefix){return [
+ ['预载',x.pre.toFixed(1)+' mm'],['预载力',x.force.toFixed(0)+' N'],['Static Sag',x.sag.toFixed(1)+' mm'],
+ ['Rider Sag',x.rider.toFixed(1)+' mm'],['目标 Rider Sag',x.target.toFixed(1)+' mm'],['剩余行程',x.remain.toFixed(1)+' mm']
+].map(a=>`<div class="result"><span>${a[0]}</span><strong>${a[1]}</strong></div>`).join('')}
+function trailCalc(){
+ const wheelRadius=Math.max(num('frontWheelInch')*25.4/2,1);
+ const angle=Math.max(Math.min(num('headAngle'),89),1);
+ const currentTrail=Math.max(num('trailCurrent'),0);
+ const targetTrail=Math.max(num('trailTarget'),0);
+ const rad=angle*Math.PI/180;
+
+ // 根据当前 Trail 反算等效前叉 Offset，再估算达到目标 Trail 所需的车头角变化
+ const offset=wheelRadius*Math.sin(rad)-currentTrail*Math.cos(rad);
+ const targetAngle=Math.atan((offset+targetTrail*Math.cos(rad))/wheelRadius)*180/Math.PI;
+ const delta=targetAngle-angle;
+
+ return {wheelRadius,angle,currentTrail,targetTrail,offset,targetAngle,delta};
+}
+function geometryCalc(f,r){
+ const wb=Math.max(num('wheelbase'),1);
+ const frontR=Math.max(num('frontWheelGeom')*25.4/2,1);
+ const rearR=Math.max(num('rearWheelInch')*25.4/2,1);
+ const baseAngle=num('baseHeadAngle');
+ const offset=num('forkOffset');
+ const mode=$('geometrySagMode').value;
+ const currentFrontSag=mode==='static'?f.sag:f.rider;
+ const currentRearSag=mode==='static'?r.sag:r.rider;
+ const baseFront=num('baseFrontSag');
+ const baseRear=num('baseRearSag');
+
+ // Change in chassis pitch from front/rear ride-height changes.
+ // Positive delta pitch means rear relatively lower than front.
+ const dFront=currentFrontSag-baseFront;
+ const dRear=currentRearSag-baseRear;
+ const pitchRad=Math.atan2((dRear-dFront),wb);
+ const pitchDeg=pitchRad*180/Math.PI;
+
+ // Approximate effective steering angle relative to ground.
+ const effectiveAngle=baseAngle+pitchDeg;
+ const rad=effectiveAngle*Math.PI/180;
+ const trail=(frontR*Math.sin(rad)-offset)/Math.max(Math.cos(rad),0.01);
+
+ const rideHeightDiff=dRear-dFront;
+ const behavior=Math.abs(pitchDeg)<0.15
+  ? '✓ 前后 Sag 变化接近，车身俯仰变化较小，几何特性基本保持原始设定。'
+  : pitchDeg>0
+  ? '⚠ 后部相对下沉更多：车身后倾，车头角与拖曳距通常增加，转向趋于稳定但响应可能变慢。'
+  : '⚠ 前部相对下沉更多：车身前倾，车头角与拖曳距通常减小，转向会更灵活，但高速稳定性可能下降。';
+
+ return {wb,frontR,rearR,baseAngle,offset,currentFrontSag,currentRearSag,baseFront,baseRear,dFront,dRear,pitchDeg,effectiveAngle,trail,rideHeightDiff,behavior};
+}
+function calculate(){
+ const t=trailCalc();
+ trailResults.innerHTML=[
+  ['前轮理论半径',t.wheelRadius.toFixed(1)+' mm'],
+  ['当前车头角',t.angle.toFixed(1)+'°'],
+  ['当前拖曳距',t.currentTrail.toFixed(1)+' mm'],
+  ['目标拖曳距',t.targetTrail.toFixed(1)+' mm'],
+  ['估算前叉 Offset',t.offset.toFixed(1)+' mm'],
+  ['估算目标车头角',t.targetAngle.toFixed(2)+'°']
+ ].map(a=>`<div class="result"><span>${a[0]}</span><strong>${a[1]}</strong></div>`).join('');
+
+ const behavior=t.targetTrail<t.currentTrail
+  ? '目标拖曳距更短：通常会让转向更灵活、更快，但高速直线稳定性可能下降。'
+  : t.targetTrail>t.currentTrail
+  ? '目标拖曳距更长：通常会提升直线稳定性，但低速转向可能更沉稳。'
+  : '当前拖曳距与目标值一致，无需进行几何调整。';
+
+ trailAdvice.textContent=`${behavior} 以当前输入的几何参数估算，从 ${t.currentTrail.toFixed(1)} mm 调整至 ${t.targetTrail.toFixed(1)} mm，车头角理论变化约 ${Math.abs(t.delta).toFixed(2)}°（${t.delta>0?'增大':'减小'}）。实际调整还会受到轮胎真实外径、前叉 Offset、三角台 Offset、前后 Sag 和悬挂行程影响，应以实车测量为最终依据。`;
+
+ const f=calc('frontAxle','frontRate','frontFree','frontInstalled','frontTravel','frontStatic','frontRider',null);
+ const r=calc('rearAxle','rearRate','rearFree','rearInstalled','rearTravel','rearStatic','rearRider','rearLink');
+ const g=geometryCalc(f,r);
+
+ geometryResults.innerHTML=[
+  ['当前前 Sag',g.currentFrontSag.toFixed(1)+' mm'],
+  ['当前后 Sag',g.currentRearSag.toFixed(1)+' mm'],
+  ['前后高度差变化',g.rideHeightDiff.toFixed(1)+' mm'],
+  ['车身俯仰变化',g.pitchDeg.toFixed(2)+'°'],
+  ['有效车头角',g.effectiveAngle.toFixed(2)+'°'],
+  ['估算动态拖曳距',g.trail.toFixed(1)+' mm']
+ ].map(a=>`<div class="result"><span>${a[0]}</span><strong>${a[1]}</strong></div>`).join('');
+
+ geometryAdvice.textContent=`几何模式使用${$('geometrySagMode').value==='rider'?'当前 Rider Sag':'当前 Static Sag'}与原始 Sag 对比。前端变化 ${g.dFront.toFixed(1)} mm，后端变化 ${g.dRear.toFixed(1)} mm。该模式用于快速评估预载和 Sag 调整对车身姿态及转向几何的影响。`;
+ geometryBehavior.textContent=g.behavior;
+
+ frontResults.innerHTML=resultHTML(f);rearResults.innerHTML=resultHTML(r);
+ const fa=f.rider-f.target, ra=r.rider-r.target;
+ frontAdvice.textContent=Math.abs(fa)<=f.eff*.03?'✓ 前 Rider Sag 接近目标。':fa>0?'⚠ 前 Rider Sag 偏大：增加前预载；若预载已高，考虑更高刚度弹簧。':'⚠ 前 Rider Sag 偏小：减少前预载；若已很低，考虑更软弹簧。';
+ rearAdvice.textContent=Math.abs(ra)<=r.eff*.03?'✓ 后 Rider Sag 接近目标。':ra>0?'⚠ 后 Rider Sag 偏大：增加后预载；若预载已高，考虑更高刚度弹簧。':'⚠ 后 Rider Sag 偏小：减少后预载；若已很低，考虑更软弹簧。';
+ const fp=f.rider/f.eff,rp=r.rider/r.eff;
+ balance.textContent=Math.abs(fp-rp)<.05?'✓ 前后下沉比例接近，基础姿态较平衡。':fp>rp?'⚠ 前部相对下沉更多，检查前预载和前压缩阻尼。':'⚠ 后部相对下沉更多，检查后预载、弹簧刚度和后压缩阻尼。';
+ persist();
+}
+function profiles(){try{return JSON.parse(localStorage.getItem('emoto_ipad_offline_profiles')||'[]')}catch{return[]}}
+function setProfiles(v){localStorage.setItem('emoto_ipad_offline_profiles',JSON.stringify(v))}
+function saveProfile(){calculate();const a=profiles();a.unshift({...data(),name:setupName.value||'未命名方案',savedAt:new Date().toISOString()});setProfiles(a.slice(0,100));renderProfiles();status.textContent='✓ 方案已保存'}
+function renderProfiles(){const a=profiles();profilesEl.innerHTML=a.length?a.map((p,i)=>`<div class="listItem"><b>${escapeHTML(p.name||'未命名方案')}</b><small>${new Date(p.savedAt||p.updatedAt).toLocaleString('zh-CN')}<br>前 C/R：${p.values.frontComp}/${p.values.frontReb} Click · 后 C/R：${p.values.rearComp}/${p.values.rearReb} Click</small><div class="actions" style="margin-top:10px"><button class="secondary" onclick="loadProfile(${i})">载入</button><button class="danger" onclick="deleteProfile(${i})">删除</button></div></div>`).join(''):'<div class="note">暂无保存方案。当前数据会自动离线保存。</div>'}
+const profilesEl=$('profiles');
+function loadProfile(i){const p=profiles()[i];if(p){apply(p);page('vehicle')}}
+function deleteProfile(i){const a=profiles();a.splice(i,1);setProfiles(a);renderProfiles()}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function download(obj,name){const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function cleanName(s){return (s||'emoto_setup').replace(/[\\/:*?"<>|]/g,'_')}
+function exportCurrent(){calculate();download(data(),cleanName(setupName.value)+'_offline.json')}
+function exportAll(){download({app:'EMotoSuspensionProOfflineProfiles',version:1,profiles:profiles(),exportedAt:new Date().toISOString()},'emoto_all_setups.json')}
+$('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const o=JSON.parse(await f.text());if(Array.isArray(o.profiles)){setProfiles([...o.profiles,...profiles()].slice(0,100));renderProfiles();importMsg.textContent=`✓ 已导入 ${o.profiles.length} 个方案。`}else{apply(o);importMsg.textContent='✓ 已导入当前方案。';page('result')}}catch{importMsg.textContent='⚠ 文件无法识别，请选择本工具导出的 JSON 文件。'}e.target.value=''});
+ids.forEach(id=>$(id).addEventListener('change',persist));
+['frontComp','frontReb','rearComp','rearReb'].forEach(id=>$(id).addEventListener('input',()=>{updateUI();persist()}));
+try{const d=JSON.parse(localStorage.getItem('emoto_ipad_offline_draft')||'null');if(d)apply(d)}catch{}
+updateUI();calculate();renderProfiles();
+</script>
+</body>
+</html>
