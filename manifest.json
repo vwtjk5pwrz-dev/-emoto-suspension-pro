@@ -1,9 +1,0 @@
-{
-  "name": "Ninebot Suspension Pro v4.2.2",
-  "short_name": "Suspension Lab",
-  "start_url": "./",
-  "display": "standalone",
-  "background_color": "#080b0c",
-  "theme_color": "#0b0f10",
-  "lang": "zh-CN"
-}
