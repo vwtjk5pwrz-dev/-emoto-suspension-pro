@@ -1,0 +1,9 @@
+{
+  "name": "Ninebot Suspension Pro v4.3",
+  "short_name": "Suspension Pro",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#080b0c",
+  "theme_color": "#0b0f10",
+  "lang": "zh-CN"
+}
